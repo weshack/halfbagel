@@ -1,0 +1,44 @@
+.sidebarButton {
+	-moz-box-shadow:inset 0px 0px 4px -50px #ffffff;
+	-webkit-box-shadow:inset 0px 0px 4px -50px #ffffff;
+	box-shadow:inset 0px 0px 4px -50px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #999999), color-stop(1, #878787) );
+	background:-moz-linear-gradient( center top, #999999 5%, #878787 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#999999', endColorstr='#878787');
+	background-color:#999999;
+	-webkit-border-top-left-radius:0px;
+	-moz-border-radius-topleft:0px;
+	border-top-left-radius:0px;
+	-webkit-border-top-right-radius:11px;
+	-moz-border-radius-topright:11px;
+	border-top-right-radius:11px;
+	-webkit-border-bottom-right-radius:11px;
+	-moz-border-radius-bottomright:11px;
+	border-bottom-right-radius:11px;
+	-webkit-border-bottom-left-radius:0px;
+	-moz-border-radius-bottomleft:0px;
+	border-bottom-left-radius:0px;
+	text-indent:0px;
+	border:1px solid #5e5e5e;
+	display:inline-block;
+	color:#403b40;
+	font-family:arial;
+	font-size:19px;
+	font-weight:bold;
+	font-style:normal;
+	height:100px;
+	line-height:100px;
+	width:26px;
+	text-decoration:none;
+	text-align:center;
+}
+.sidebarButton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #878787), color-stop(1, #999999) );
+	background:-moz-linear-gradient( center top, #878787 5%, #999999 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#878787', endColorstr='#999999');
+	background-color:#878787;
+	cursor: pointer; cursor: hand;
+}.sidebarButton:active {
+	position:relative;
+	top:1px;
+}

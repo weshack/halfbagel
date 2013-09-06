@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GRS+
+    </title>
+    <meta
+    name="viewport"
+    content="initial-scale=1.0, user-scalable=no">
+        <meta
+        charset="utf-8">
+        <link rel="shortcut icon" href="favicon.ico" >
+         <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet">
+         <link href="extra.css" rel="stylesheet">
+            <style>
+                html, body, #map-canvas {
+                    margin: 0;
+                    padding: 0;
+                    height: 100%;
+                    overflow: hidden;
+                }
+                #map-canvas {
+                    margin-top:40px;
+                    height:90%;
+                }
+                .scrollable {
+                    height:600px;
+                    overflow-y:scroll;
+                    margin-bottom:10px;
+                    border-color:gray;
+                    border-width: 1px;
+                  }
+                #leftSidebar {
+                    position:fixed;
+                    top:45px;
+                    left: -20px;
+                    z-index: 1000;
+                    display:none;
+                }
+                #rightSidebar {
+                    position:fixed;
+                    top:45px;
+                    right: 5px;
+                    z-index: 1000;
+                    height:500px;
+                }
+                #sidebarButton {
+                    position:fixed;
+                    top:245px;
+                    left:-5px;
+                    z-index: 1000;
+                }
+            </style>
+            <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+                <script>
+                    var map;
+                    addresses = [
+                        ['200 Church', false, 'http://www.wesleyan.edu/reslife/housing/residence/200_Church.jpg', 41.5544318, -72.65528429999999],
+                        ['Bennet Hall', true, 'http://www.wesleyan.edu/reslife/housing/residence/Bennet_Hall.jpg', 41.5540738, -72.6596956],
+                        ['Butterfields', true, 'http://www.wesleyan.edu/reslife/housing/residence/Butterfield_1.jpg', 41.5522169, -72.6555383],
+                        ['Clark Hall', false, 'http://www.wesleyan.edu/reslife/housing/residence/Clark_Hall.jpg', 41.5545308, -72.6577555],
+                        ['Nicolson', true, 'http://www.wesleyan.edu/reslife/housing/residence/Nicolson_1.jpg', 41.5545316, -72.66003909999999],
+                        ['West College', false, 'http://www.wesleyan.edu/reslife/housing/residence/West_College_1.jpg', 41.554104, -72.6590762]
+                    ];
+
+                    function getIcon(boolVar) {
+                        if (boolVar == true) {
+                            return "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
+                        } else if (boolVar == false) {
+                            return "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
+                        }
+                    }
+                        var mapLatLngs = {};
+                        var markers = {};
+                        var infowindows = {};
+                    function initialize() {
+                        map = new google.maps.Map(document.getElementById('map-canvas'), {
+                            zoom: 17,
+                            center: new google.maps.LatLng(41.5544318, -72.65528429999999),
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        });
+
+                        addresses.forEach(function (hall) {
+                            //get latlng for each hall ->decided to store them in database
+                            mapLatLngs[hall[0]] = new google.maps.LatLng(hall[3], hall[4]);
+                            //create markers for each hall according to their availability
+                            markers[hall[0]] = new google.maps.Marker({
+                                position: mapLatLngs[hall[0]],
+                                icon: getIcon(hall[1]),
+                                map: map,
+                                title: hall[0]
+                            });
+
+                            //create infowindows for each hall
+                            infowindows[hall[0]] = new google.maps.InfoWindow({
+                                content: '<b>'+hall[0] + '</b><p>There are 3 rooms/spots available.<br><a onclick="">More</a></p><img src="' + hall[2] + '">'
+                            });
+                            //create infowindow eventlistener for each hall
+                            //write a loop for each eventlistener to close all infowindows
+                            google.maps.event.addListener(markers[hall[0]], 'click', function () {
+                                for (hallName in infowindows) {
+                                    infowindows[hallName].close();
+                                }
+                                infowindows[hall[0]].open(map, markers[hall[0]]);
+                            });
+                        });
+
+
+
+                    }
+
+                    google.maps.event.addDomListener(window, 'load', initialize);
+                </script>
+                    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://getbootstrap.com/2.3.2/assets/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+  <header>
+      <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">GRS+</a>
+          <div class="nav-collapse collapse pull-right">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about" data-toggle="modal">About</a></li>
+              <li><a href="http://wesleyan.edu/" target="_blank">Wesleyan University</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    </header>
+    <div id="leftSidebar" class="well span3">
+        
+    <input type="text" class="search-query" placeholder="Search here" />        
+    <i class="icon-search"></i>
+    <input id="mySubmit" type="submit" value="Go" class="hidden" />
+
+        <div class="sidebar-nav scrollable" id="housesList">
+            <ul class="nav nav-list">
+              <li class="nav-header">1 Person Houses</li>
+              <li class="active"><a href="#">53B Home Avenue</a></li>
+              <li class="nav-header">2 Person Houses</li>
+              <li><a href="#">162A Church Street</a></li>
+              <li><a href="#">162B Church Street</a></li>
+              <li><a href="#">264B Court Street</a></li>
+              <li><a href="#">125 Cross Street</a></li>
+              <li><a href="#">6 Fountain Avenue</a></li>
+              <li class="nav-header">3 Person Houses</li>
+              <li><a href="#">148B Church</a></li>
+              <li><a href="#">148C Church</a></li>
+              <li><a href="#">127 Cross Street</a></li>
+              <li class="nav-header">4 Person Houses</li>
+              <li><a href="#">162A Church Street</a></li>
+              <li><a href="#">162B Church Street</a></li>
+              <li><a href="#">264B Court Street</a></li>
+              <li><a href="#">125 Cross Street</a></li>
+              <li><a href="#">6 Fountain Avenue</a></li>
+              <li class="nav-header">5 Person Houses</li>
+              <li><a href="#">148B Church</a></li>
+              <li><a href="#">148C Church</a></li>
+              <li><a href="#">127 Cross Street</a></li>
+              <li class="nav-header">6 Person Houses</li>
+              <li><a href="#">53B Home Avenue</a></li>
+            </ul>
+
+
+          </div>
+          <div class="row-fluid">    
+            <div class="span6">
+                <label class="checkbox">
+                    <input type="checkbox"> 1 Person
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox"> 2 Person
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox"> 3 Person
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox"> Quiet House
+                </label>
+            </div><div class="span6">
+                <label class="checkbox">
+                    <input type="checkbox"> 4 Person
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox"> 5 Person
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox"> 6 Person
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox"> Program House
+                </label>
+            </div>
+        </div>
+        </div><!--/.well -->
+    </div>
+    <span class="sidebarButton" id="sidebarButton"><i class="icon-search"></i></span>
+    <div id="map-canvas"></div>
+
+    <div id="rightSidebar" class="well span3 scrollable">
+    		<h1>53B Home Avenue</h1>
+                    <div id="col2"><h3>Four person house</h3><unit-description><p><span style="text-decoration: underline;"><b>House furnishings</b></span>:</p>
+            <ul>
+            <li>Common Area: couch, chair, end table and coffee table</li>
+            </ul>
+            <ul>
+            <li>Kitchen: kitchen table, chairs, refrigerator, stove and oven</li>
+            </ul>
+            <ul>
+            <li>Bathroom(s): 1</li>
+            </ul>
+            <ul>
+            <li>Bedrooms: desk, chair, dresser and bookcase</li>
+            </ul>
+            <p>Bed type in each room is as follows:</p>
+            <p>Bedroom 1: full<br>Bedroom 2: full<br>Bedroom 3: full<br>Bedroom 4: full</p>
+        </unit-description>
+    </div>
+
+<!-- Modal -->
+<div id="about" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">About the project</h3>
+  </div>
+  <div class="modal-body">
+    <p>A better general room selection (GRS) application for any university students; implemented as part of <a href="http://weshack.com/">WesHack 2013 2.0</a> by 
+    <ul><li>Arthur Burkart,</li> <li>Tyler Harden,</li> <li>Cumhur Korkut,</li> <li>Wei Wang.</li></ul></p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+
+ <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-alert.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-modal.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-dropdown.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-tab.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-tooltip.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-popover.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-button.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-collapse.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-carousel.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-typeahead.js"></script>
+    <script>
+     resizeMap = function () {
+        var column_height = $(window).height();
+        $("#map-canvas").css("height",column_height - 40 + "px")
+        $(".scrollable").css("height",column_height - 90 + "px");
+        $("#housesList").css("height",column_height - 230 + "px");
+    };
+    $(document).ready(function () {
+        resizeMap();
+    });
+     window.onresize = function(event) {
+        resizeMap();
+      }
+    $("#sidebarButton").click(function() {
+      $("#leftSidebar").toggle( "slide" );
+    });
+    $(document).click(function(e){
+        if (! $(e.target).closest('#rightSidebar').length ) 
+            $('#rightSidebar').hide( "slide",{direction:"right"} );
+    });
+
+   
+		
+
+		
+</script>
+
+
+
+</body>
+
+</html>
