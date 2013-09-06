@@ -1,0 +1,540 @@
+@import compass/reset
+
+$subj-list-width: 350px
+$course-list-width: 400px
+$header-height: 45px
+
+* 
+  box-sizing: border-box
+
+h2.welcome
+  font-size: 36px
+  margin-bottom: 18px
+
+.relative
+  position: relative
+  width: 100%
+  height: 100%
+
+html, body 
+  margin: 0
+  padding: 0
+  overflow: hidden
+  font-weight: 300
+
+h1, h2, h3, h4
+  font-family: 'Archivo Narrow', sans-serif
+
+body
+  font-family: Helvetica
+
+a, a:visited 
+  color: #5E8C6A
+  text-decoration: none
+
+a:hover
+  color: #BFB35A
+  text-decoration: underline
+
+.section-update
+  display: block
+  width: 150px
+  height: 18px
+  border: none
+  float: right
+  background-color: #C5292A
+  border-radius: 3px
+  color: white
+  cursor: hand
+
+  &.add-section
+    background-color: #218C2B
+
+    &:after
+      content: 'Add to my schedule'
+
+  &.remove-section
+    background-size: 90%
+    background-color: #C5292A
+
+    &:after
+      content: 'Remove from schedule'
+
+  &.session-conflicts
+    background-color: #CCC
+    cursor: auto
+
+    &:after
+      content: 'Add to my schedule'
+
+#wrapper
+  position: absolute
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+
+  #subject-list, #course-list
+    line-height: 1.125em
+
+    ul 
+      list-style-type: none
+
+    user-select: none
+
+  #subject-list
+    position: absolute
+    width: $subj-list-width
+    left: 0
+    top: $header-height
+    bottom: 0
+    border-right: 1px solid black
+    overflow-y: scroll
+    cursor: pointer
+    z-index: 3
+    box-shadow: 0 0 5px rgba(0,0,0,0.5)
+
+    li
+      cursor: pointer
+      padding: 10px
+      border-bottom: 1px solid #444
+      font-size: 15px
+      background: linear-gradient(to bottom, rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%)
+
+      &:hover
+        background: rgb(237, 239, 250)
+
+    .selected-category
+      //background: rgb(237, 239, 250)
+      //background: rgb(242, 252, 244)
+      background: rgb(192, 221, 228)
+      &:hover
+        background: rgb(192, 221, 228)
+        
+      //font-weight: bold
+
+    .category-separator 
+      height: 5px
+      padding: 0
+      background: lightgrey
+        
+    #category-scheduled
+      .category-title
+        padding-left: 10px
+
+    #category-starred
+      .category-title
+        padding-left: 10px
+
+
+  #course-list
+    position: absolute
+    width: $course-list-width
+    left: $subj-list-width
+    top: $header-height
+    bottom: 0
+    border-right: 1px solid black
+    overflow-y: scroll
+    cursor: pointer
+    z-index: 2
+    box-shadow: 0 0 5px rgba(0,0,0,0.5)
+
+    /* li:nth-child(odd)
+    /*   background-color: #E8E8E8*/
+
+    .course-result
+      border-bottom: 1px solid #444
+      padding: 10px
+      background-color: #FEFCFB
+      &:hover
+        background: rgb(237, 239, 250)
+
+    .selected-course-result
+      background: rgb(192, 221, 228)
+      &:hover
+        background: rgb(192, 221, 228)      
+      /* .star-container:hover
+      /*   .star-character:before
+      /*     position: absolute
+      /*     content: "\2605"
+      /*     color: orange*/
+
+  #content
+    position: absolute
+    left: $subj_list_width + $course_list_width
+    text-align: left
+    top: $header-height
+    right: 0
+    bottom: 30px
+    overflow-y: scroll
+    padding: 20px
+
+
+    /* h1
+    /*   margin: 5 200 0 100
+    /*   padding: 0
+    /*   font-size: 20px
+    /*   font-weight: 200
+    /*   border: 3px solid red
+    /*   padding: 10px
+
+    /* h2, h3
+    /*   margin: 0 0 10 0
+    /*   padding: 0
+    /*   font-weight: normal
+    /*   font-weight: 200
+    /*   color: #222222
+
+    /* #course-code
+    /*   font-weight: bold
+
+    /* #course-name
+    /*   font-size: 70%
+
+    /* #header
+    /*   color: white
+    /*   font-weight: bold
+    /*   text-align: center
+
+    /* #data
+    /*   text-align: center
+    /*   margin: 5px 0px 10px 0px
+
+    /* #container
+    /*   width: 200px
+    /*   padding: 5px
+    /*   border: 1px solid #cccccc
+    /*   background: #FAFAFA
+    /*   text-align: center
+    /*   float: right
+
+    /* #description
+    /*   width: 400px
+    /*   padding-top: 20px
+    /*   padding-left: 10px
+    /*   text-align: justify
+    /*   line-height: 1.2em*/
+
+  nav#main 
+    position: fixed
+    width: 100%
+    height: $header-height
+    border-bottom: 1px solid #444
+    z-index: 10
+    box-shadow: 0 0 5px rgba(0,0,0,0.5)
+    background-color: white
+
+    h1#title
+      position: absolute
+      top: 0
+      left: 10px
+      font-weight: 300
+      font-size: 26px
+      line-height: $header-height
+
+    #course-search
+      position: absolute
+      top: 6px
+      //left: $subj-list-width
+      left: 140px
+      margin: 0
+      height: $header-height - 12
+      line-height: $header-height - 12
+      box-shadow: none
+      width: 400px
+      vertical-align: middle
+      padding: 10px
+      font-size: 15px
+      margin-left: auto
+      margin-right: auto
+      border-radius: $header-height/2 - 6
+      border: 1px solid #CCC 
+      transition: all 0.2s linear
+
+      &:focus
+        outline-width: 0
+        border: 1px solid #AAA 
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.2)
+
+    #notification
+      position: absolute
+      top: 0
+      //left: $subj-list-width + $course-list-width + 350
+      left: 900px
+      right: 0
+      height: 100%
+      margin-top: 10px
+
+    #schedule
+      position: absolute
+      top: 0
+      //left: $course-list-width + $subj-list-width
+      left: 550px
+      right: 0
+      height: 100%
+
+      .schedulerel
+        height: $header-height
+        width: 300px
+        margin-left: 20px
+        border-bottom: 1px solid black
+        background-color: rgb(255,255,255)
+        transition: all 0.2s ease-in-out
+
+        &:hover
+          height: 100px
+          box-shadow: 0 0 5px rgba(0,0,0,0.5)
+
+      .day
+        width: 14.2%
+        height: 100%
+        display: inline-block
+        border-right: 1px solid #CCC
+
+        &:first-child
+          border-left: 1px solid #444
+
+        &:last-child
+          border-right-color: #444
+
+        .dayName
+          text-align: center
+          margin-top: -14px
+          color: #DDD
+          text-transform: uppercase
+          font-size: 12px
+
+        .mtg 
+          position: absolute
+          width: 100%
+          cursor: hand
+          transition: opacity 0.1s linear
+
+          &.fade
+            opacity: 0.2
+
+
+.course-result-code
+  color: #AAA
+  font-family: 'Archivo Narrow', sans-serif
+
+.course-result-professor
+  font-size: 13px
+
+.course-result-name
+  //white-space: nowrap
+  //text-overflow: ellipsis
+  //overflow: hidden
+  width: 270px
+
+.starred-course-result
+  background: #FFFDE8
+  .star-character:before
+    position: absolute
+    content: "\2605"
+    color: orange
+  
+
+  /* .star-character:hover:before
+  /*   position: absolute
+  /*   content: ""
+  /*   color: orange*/
+
+
+.star-container
+  float: right
+  text-align: center
+  .star-count
+    margin-top: 10px
+    font-size: 12px
+
+.calendar-icon
+  float: right
+  width: 20px
+  height: 25px
+  background-size: 20px auto
+  background-image: none
+  margin-right: 10px
+
+  &.scheduled
+    background-image: url(/static/images/calendar.png)
+
+.star-character
+  font-size: 25px
+  display: block
+  cursor: pointer
+
+
+
+.course-results-department-name
+  font-weight: bold
+  display: block
+
+.popup
+  position: absolute
+
+.count-indicator
+  border-radius: 15px
+  border: 1px solid rgb(22, 137, 173)
+  padding: 0 3px 1 3px
+  font-size: 9px
+  background: rgb(22, 137, 173)
+  color: white
+  font-weight: bold 
+  float: right
+  width: 30px
+  text-align: center
+
+.star-container
+  cursor: pointer
+  z-index: 50
+
+.course-result-main
+  &:hover
+    color: darkblue
+    
+
+.main-col
+  margin-bottom: 30px
+
+.course-result-instructors
+  font-size: 13px
+  font-style: italic
+
+.section
+  min-height: 200px 
+  border-bottom: 1px solid #AAA
+
+  &:last-child
+    border-bottom: none
+
+.section-schedule
+
+  .schedulerel
+    height: 150px
+    width: 45%
+    margin-left: 20px
+    border-bottom: 1px solid black
+    border-top: 1px solid black
+    background-color: rgb(255,255,255)
+    float: right
+    position: static
+
+  .day
+    width: 14.2%
+    height: 100%
+    display: inline-block
+    border-right: 1px solid #CCC
+
+    &:first-child
+      border-left: 1px solid #444
+
+    &:last-child
+      border-right-color: #444
+
+    .dayName
+      text-align: center
+      margin-top: -14px
+      color: black
+      text-transform: uppercase
+      font-size: 12px
+      z-index: 50
+
+    .mtg 
+      position: absolute
+      width: 100%
+      border-style: solid
+      border-color: transparent
+
+.section-in-schedule
+  .schedulerel
+    border: 1px solid darkblue
+
+.course-info 
+
+  ul
+    list-style-type: bullet
+
+  header
+
+    border-bottom: 1px solid #AAA
+    padding-bottom: 10px
+    margin-right: 40px
+
+    h1, h3
+      font-size: 24px
+      display: inline
+
+    h1 
+      font-size: 24px
+      font-weight: bold
+      color: #AAA
+      margin-right: 5px
+
+  .course-info-description
+    margin: 20px 0
+    text-align: left
+    line-height: 1.33em
+
+  h4
+    text-transform: uppercase
+    font-size: 18px
+    color: #999
+    margin-bottom: 0.5em
+    
+
+  .star-container
+    position: default
+
+  .section-natural-language-text
+    font-size: 13px    
+
+    b
+      font-weight: 600
+
+  p
+    margin-top: 5px
+
+
+
+.color-red
+  color: red
+
+.color-darkblue
+  color: darkblue
+
+.courseInfo
+  padding-top: 5px
+  font-size: 15px
+
+#load-sample-schedule
+  display: block
+  width: 150px
+  height: 30px
+  border: none
+  background-color: darkblue
+  border-radius: 3px
+  color: white
+  cursor: hand
+  margin-top: 20px
+  font-size: 10px
+
+
+footer
+  position: absolute
+  text-align: center
+  width: 100%
+  height: 30px
+  bottom: 0px
+  padding: 5px
+  border-top: 1px solid black
+  background: white
+  z-index: 10
+  a:hover
+    text-decoration: none
+ 
+.course-transition
+  cursor: pointer
+  color: darkred
+  &:hover
+    text-decoration: underline  

@@ -1,0 +1,10 @@
+*.pyc
+#*py
+static/stylesheets
+static/.sass-cache/*
+.DS_Store
+ *.sassc
+#*#
+*.orig
+
+static/js/*.js
