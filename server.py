@@ -16,7 +16,6 @@ def get_all_courses(conn):
     ret = {}
     c = conn.cursor()
     for courseid in range(int(c.execute("select COUNT(*) from courses").next()[0])):
-        #ret.append(get_all_information(conn, courseid))
         summary = get_course_summary(conn, courseid)
         summary['stars'] = count_stars(courseid)
         summary['instructors'] = get_instructors_for_course(g.db, courseid)
@@ -37,7 +36,6 @@ def search():
     term = request.args.get('name', '')
     print 'term', term
     if len(term):
-        #results = get_courses_from_cursor(search_for_course_by_title(g.db, term))
         ret = []
         cursor = search_for_course_by_title(g.db, term)
         for item in cursor:
@@ -65,17 +63,6 @@ def search_code():
     if len(code):
         return simplejson.dumps(search_for_course_by_code(g.db, code))
     return simplejson.dumps([])
-
-# @app.route("/search_by_code")
-# def search_code():
-#     code = request.args.get('code', '')
-#     if len(code):
-#         ret = []
-#         cursor = search_for_course_by_code(g.db, code)
-#         for item in cursor:
-#             ret.append(item[0])
-#         return simplejson.dumps(ret)
-#     return simplejson.dumps([])
 
 @app.route('/course/<courseid>')
 def course_info(courseid):

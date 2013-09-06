@@ -1,4 +1,4 @@
-WesmapsPlus
+RoomLottery
 ===========
 
-A better course searching interface for Wesleyan University students, implemented as part of [Weshack 2013](http://weshack.com/) by Anastasis Germanidis, Tobias Butler, Max Dietz, and Justin Raymond.
+A better generic room selection (GRS) application for any university students; implemented as part of [Weshack 2013 2.0] (http://weshack.com/) by Cumhur Korkut, Arthur Burkart, Wei Wang, Tyler Harden.
