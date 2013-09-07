@@ -162,6 +162,11 @@
             <span class="icon-bar"></span>
           </button>
           <a class="brand" href="#">GRS+</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+            	<li class="active"><a href="#" id="toolbarName">You have a group</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
           <div class="nav-collapse collapse pull-right">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
@@ -309,25 +314,32 @@
     <h3 id="myModalLabel">Groups</h3>
   </div>
   <div class="modal-body">
-	  <p>
-	  	<form class="form-search">
-			<div class="input-append">
-			<input type="text" class="span2 search-query">
-			    <button type="submit" class="btn"><i class="icon-plus"></i></button>
+	  
+		<ul class="nav nav-tabs" id="groupTab">
+		  <li class="active"><a href="#newgroup"><i class="icon-plus"></i> Create your group</a></li>
+		  <li><a href="#join"><i class="icon-ok"></i>  Join another group</a></li>
+		</ul>
+		 
+		<div class="tab-content">
+		  <div class="tab-pane active" id="newgroup">
+		  	<div class="input-append">
+			  <input class="span3" id="useremail" type="text" placeholder="Enter your @wesleyan.edu user name"><span class="add-on">@wesleyan.edu</span>
+			  <button class="btn" type="button"><i class="icon-plus"></i> Create</button>
 			</div>
-		</form>
-		<div class="row-fluid">
-        <div class="span6">
-          <h5><i class="icon icon-globe"></i> John Doe</h5>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
-        </div>
- 
-        <div class="span6">
-          <h5><i class="icon-ok"></i> Jane Doe</h5>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
-        </div>
-      </div>
-	  </p>
+			<p>Your unique <b>Group ID</b> will be sent to you via e-mail. Since <b>Group ID</b> is the only requirement to join a group, please don't share your Group ID with anyone other than the ones with whom you plan to be in the same group.</p>
+		  </div>
+		  <div class="tab-pane" id="join">
+		  	<p>The unique <b>Group ID</b> will provide you access to join a group.</p>
+		  	<div class="input-append">
+			  <p><input class="span3" id="useremail" type="text" placeholder="Enter your @wesleyan.edu user name"><span class="add-on">@wesleyan.edu</span></p>
+			  <p><input class="span4" id="usergroupid" type="text" placeholder="Enter the Group ID of the group you want to join"><button class="btn btn-primary" type="button"><i class="icon-ok icon-white"></i> Join</button></p>
+			  
+			</div>
+			
+		  </div>
+		</div>
+		
+	  
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -365,6 +377,10 @@
     $(document).ready(function () {
         resizeMap();
         $('#rsTab a').click(function (e) {
+		  e.preventDefault();
+		  $(this).tab('show');
+		});
+		$('#groupTab a').click(function (e) {
 		  e.preventDefault();
 		  $(this).tab('show');
 		});
@@ -455,6 +471,9 @@
 	    	$("#tr"+roomArray[1]).addClass("info");
 	    });
     //$(this).toggleClass('warning');
+  	});
+  	$("body").on("click","#selectableGroups button",function(event) {
+
   	});
 
 
