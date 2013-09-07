@@ -60,7 +60,21 @@
             <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
                 <script>
                 	//load the database
-
+                	var objLength = function(obj){    
+						    var key,len=0;
+						    for(key in obj){
+						        len += Number( obj.hasOwnProperty(key) );
+						    }
+						    return len;
+						};
+				    Array.prototype.removeByValue = function(val) {
+					    for(var i=0; i<this.length; i++) {
+					        if(JSON.stringify(this[i]) == JSON.stringify(val)) {
+					            this.splice(i, 1);
+					            break;
+					        }
+					    }
+					}
 
                 	addresses = [
                         ['200 Church', false, 'http://www.wesleyan.edu/reslife/housing/residence/200_Church.jpg', 41.5544318, -72.65528429999999],
@@ -103,7 +117,7 @@
                             });
 
                             //create infowindows for each hall
-                            infowindows[hall[0]] = new google.maps.InfoWindow({content: '<b>'+hall[0] + '</b><p>There are 3 rooms/spots available. <a class="moreLink" onclick=\'openRightBar("'+hall[0] +'")\'>More</p><img src="' + hall[2] + '"></a>'
+                            infowindows[hall[0]] = new google.maps.InfoWindow({content: '<b>'+hall[0] + '</b><p>There are '+objLength(roomdata[hall[0]])+' rooms/spots available. <a class="moreLink" onclick=\'openRightBar("'+hall[0] +'")\'>More</p><img src="' + hall[2] + '"></a>'
                             });
                             //create infowindow eventlistener for each hall
                             //write a loop for each eventlistener to close all infowindows
@@ -246,12 +260,12 @@
 			  <div class="tab-pane" id="rooms">
 			  <button class="btn" type="button" onclick="selectAll();">Select All</button>
 			  <div class = 'btn-group'>
-			    <button class = 'btn dropdown-toggle' data-toggle = 'dropdown'>Select All on: <span class = 'caret'></span></button>
+			    <button class = 'btn dropdown-toggle' data-toggle = 'dropdown'>Select: <span class = 'caret'></span></button>
 			    <ul class = 'dropdown-menu'>
 			        <li><a onclick="selectFloor('1');">1st floor</a></li>
-			        <li><a onclick="selectFloor('2');">2st floor</a></li>
-			        <li><a onclick="selectFloor('3');">3st floor</a></li>
-			        <li><a onclick="selectFloor('4');">4st floor</a></li>
+			        <li><a onclick="selectFloor('2');">2nd floor</a></li>
+			        <li><a onclick="selectFloor('3');">3rd floor</a></li>
+			        <li><a onclick="selectFloor('4');">4th floor</a></li>
 			        <li><a onclick="clearSelections();">Clear selections</a></li>
 			    </ul>
 			</div>​<div class="scrollableTab">
@@ -338,21 +352,7 @@
     	$.getJSON('roomdata.json', function(data) {
     		roomdata=data;
     	});
-    	var objLength = function(obj){    
-		    var key,len=0;
-		    for(key in obj){
-		        len += Number( obj.hasOwnProperty(key) );
-		    }
-		    return len;
-		};
-    Array.prototype.removeByValue = function(val) {
-	    for(var i=0; i<this.length; i++) {
-	        if(JSON.stringify(this[i]) == JSON.stringify(val)) {
-	            this.splice(i, 1);
-	            break;
-	        }
-	    }
-	}
+    	
      resizeMap = function () {
         var column_height = $(window).height();
         $("#map-canvas").css("height",column_height - 40 + "px")
@@ -389,7 +389,7 @@
 					$("#roomTable").append('<tr id="tr'+single[0]+'"><td>101</td><td><span class="label label-success">'+single[1]+'/'+single[1]+'</span></td><td><input type="checkbox" id="ch'+single[0]+'"></td></tr>');
 				});*/
 				roomList = roomdata[place];
-				$("#btnAvailable").html(objLength(roomList) + " rooms available")
+				$("#btnAvailable").html(objLength(roomList) + " rooms available");
 				for(number in roomList) {
 
 					$("#roomTable").append('<tr id="tr'+number+'"><td>'+number+'</td><td><span class="label label-success">'+roomList[number]+'/'+roomList[number]+'</span></td><td><input type="checkbox" id="ch'+number+'"></td></tr>');
