@@ -6,4 +6,4 @@
 from scrapy.item import Item, Field
 
 class Residence(Item):
-	descriptor = Field()
+	link = Field()
