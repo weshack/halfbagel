@@ -60,6 +60,15 @@
             <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
             <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
                 <script>
+                	if(!localStorage['selectedRooms']) {
+                		var selectedRooms = [];
+                	} else {
+                		var selectedRooms = eval(localStorage['selectedRooms']);
+                	}
+                	$(window).unload(function() {
+					  localStorage['selectedRooms'] = JSON.stringify(selectedRooms);
+					});
+
                 	//load the database
                 	var roomdata;
 			    	$.getJSON('roomdata.json', function(data) {
@@ -309,6 +318,20 @@
   </div>
 </div>
 <!-- Modal -->
+<div id="checkout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Register your selections</h3>
+  </div>
+  <div class="modal-body">
+    <p>The rooms you have selected are these:</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+<!-- Modal -->
 <div id="groups" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -464,7 +487,7 @@
 	       	check.prop('checked', true);
 	    }
     });*/
-	var selectedRooms = [];
+
 	function selectedToolbarCheck() {
     	if(selectedRooms.length > 0) {
     		$("#toolbarRooms").show();
