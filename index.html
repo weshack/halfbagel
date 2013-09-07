@@ -164,8 +164,8 @@
           <a class="brand" href="#">HalfBagel</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-            	<li class="active" id="toolbarGroup" style="display:none"><a href="#">You're in a group</a></li>
-            	<li class="active" id="toolbarRooms" style="display:none"><a href="#">You have chosen rooms</a></li>
+            	<li class="active" id="toolbarGroup" style="display:none"><a href="#groups">You're in a group</a></li>
+            	<li class="active" id="toolbarRooms" style="display:none"><a href="#checkout" data-toggle="modal">You have chosen rooms</a></li>
             </ul>
           </div><!--/.nav-collapse -->
           <div class="nav-collapse collapse pull-right">
@@ -317,8 +317,10 @@
   <div class="modal-body">
 	  
 		<ul class="nav nav-tabs" id="groupTab">
+		  <li style="display:none;" id="groupsCurrentTab"><a href="#currentgroup"><i class="icon-user"></i>  Your current group</a>
 		  <li class="active"><a href="#newgroup"><i class="icon-plus"></i> Create your group</a></li>
 		  <li><a href="#join"><i class="icon-ok"></i>  Join another group</a></li>
+		  </li>
 		</ul>
 		 
 		<div class="tab-content">
@@ -336,6 +338,10 @@
 			  <p><input class="span4" id="usergroupid" type="text" placeholder="Enter the Group ID of the group you want to join"><button class="btn btn-primary" type="button" onclick="joinGroup();"><i class="icon-ok icon-white"></i> Join</button></p>
 			  
 			</div>
+			
+		  </div>
+		  <div class="tab-pane" id="currentgroup">
+		  	<p>You are in a group with <i>Tyler Harden</i>.</p>
 			
 		  </div>
 		</div>
@@ -366,7 +372,10 @@
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-carousel.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-typeahead.js"></script>
     <script>
-
+    function showCurrentGroupTab() {
+		$("#groupsCurrentTab").show();
+   		$('#groupTab a:first').tab('show');
+    }
     	
      resizeMap = function () {
         var column_height = $(window).height();
@@ -541,7 +550,7 @@
     }
 		
 </script>
-
+<script src="little.js"></script>
 
 
 </body>
