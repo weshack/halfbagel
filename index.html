@@ -57,18 +57,39 @@
                     z-index: 1000;
                 }
             </style>
+            <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
             <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
                 <script>
                 	//load the database
+                	var roomdata;
+			    	$.getJSON('roomdata.json', function(data) {
+			    		roomdata=data;
+			    	});
+                	var objLength = function(obj){    
+						    var key,len=0;
+						    for(key in obj){
+						        len += Number( obj.hasOwnProperty(key) );
+						    }
+						    return len;
+						};
+				    Array.prototype.removeByValue = function(val) {
+					    for(var i=0; i<this.length; i++) {
+					        if(JSON.stringify(this[i]) == JSON.stringify(val)) {
+					            this.splice(i, 1);
+					            break;
+					        }
+					    }
+					}
 
                 	addresses = [
                         ['200 Church', false, 'http://www.wesleyan.edu/reslife/housing/residence/200_Church.jpg', 41.5544318, -72.65528429999999],
                         ['Bennet Hall', true, 'http://www.wesleyan.edu/reslife/housing/residence/Bennet_Hall.jpg', 41.5540738, -72.6596956],
-                        ['Butterfields', true, 'http://www.wesleyan.edu/reslife/housing/residence/Butterfield_1.jpg', 41.5522169, -72.6555383],
+                        ['Butterfield B', true, 'http://www.wesleyan.edu/reslife/housing/residence/Butterfield_1.jpg', 41.5522169, -72.6555383],
                         ['Clark Hall', false, 'http://www.wesleyan.edu/reslife/housing/residence/Clark_Hall.jpg', 41.5545308, -72.6577555],
-                        ['Nicolson', true, 'http://www.wesleyan.edu/reslife/housing/residence/Nicolson_1.jpg', 41.5545316, -72.66003909999999],
+                        ['Nicolson 5 and 5.5', true, 'http://www.wesleyan.edu/reslife/housing/residence/Nicolson_1.jpg', 41.5545316, -72.66003909999999],
                         ['West College', false, 'http://www.wesleyan.edu/reslife/housing/residence/West_College_1.jpg', 41.554104, -72.6590762]
                     ];
+
 
 
                     var map;
@@ -101,7 +122,7 @@
                             });
 
                             //create infowindows for each hall
-                            infowindows[hall[0]] = new google.maps.InfoWindow({content: '<b>'+hall[0] + '</b><p>There are 3 rooms/spots available. <a class="moreLink" onclick=\'openRightBar("'+hall[0] +'")\'>More</p><img src="' + hall[2] + '"></a>'
+                            infowindows[hall[0]] = new google.maps.InfoWindow({content: '<b>'+hall[0] + '</b><p>There are '+objLength(roomdata[hall[0]])+' rooms/spots available. <a class="moreLink" onclick=\'openRightBar("'+hall[0] +'")\'>More</p><img src="' + hall[2] + '"></a>'
                             });
                             //create infowindow eventlistener for each hall
                             //write a loop for each eventlistener to close all infowindows
@@ -145,6 +166,7 @@
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
               <li><a href="#about" data-toggle="modal">About</a></li>
+              <li><a href="#groups" data-toggle="modal">Groups</a></li>
               <li><a href="http://wesleyan.edu/" target="_blank">Wesleyan University</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -243,12 +265,13 @@
 			  <div class="tab-pane" id="rooms">
 			  <button class="btn" type="button" onclick="selectAll();">Select All</button>
 			  <div class = 'btn-group'>
-			    <button class = 'btn dropdown-toggle' data-toggle = 'dropdown'>Select All on: <span class = 'caret'></span></button>
+			    <button class = 'btn dropdown-toggle' data-toggle = 'dropdown'>Select: <span class = 'caret'></span></button>
 			    <ul class = 'dropdown-menu'>
-			        <li><a onclick="selectFloor(1);">1st floor</a></li>
-			        <li><a onclick="selectFloor(2);">2st floor</a></li>
-			        <li><a onclick="selectFloor(3);">3st floor</a></li>
-			        <li><a onclick="selectFloor(4);">4st floor</a></li>
+			        <li><a onclick="selectFloor('1');">1st floor</a></li>
+			        <li><a onclick="selectFloor('2');">2nd floor</a></li>
+			        <li><a onclick="selectFloor('3');">3rd floor</a></li>
+			        <li><a onclick="selectFloor('4');">4th floor</a></li>
+			        <li><a onclick="clearSelections();">Clear selections</a></li>
 			    </ul>
 			</div>​<div class="scrollableTab">
 			  	<table class="table table-striped" id="roomTable">
@@ -279,12 +302,43 @@
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
   </div>
 </div>
+<!-- Modal -->
+<div id="groups" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Groups</h3>
+  </div>
+  <div class="modal-body">
+	  <p>
+	  	<form class="form-search">
+			<div class="input-append">
+			<input type="text" class="span2 search-query">
+			    <button type="submit" class="btn"><i class="icon-plus"></i></button>
+			</div>
+		</form>
+		<div class="row-fluid">
+        <div class="span6">
+          <h5><i class="icon icon-globe"></i> John Doe</h5>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+        </div>
+ 
+        <div class="span6">
+          <h5><i class="icon-ok"></i> Jane Doe</h5>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+        </div>
+      </div>
+	  </p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
 
 
  <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-alert.js"></script>
@@ -299,19 +353,14 @@
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-carousel.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-typeahead.js"></script>
     <script>
-    Array.prototype.removeByValue = function(val) {
-	    for(var i=0; i<this.length; i++) {
-	        if(JSON.stringify(this[i]) == JSON.stringify(val)) {
-	            this.splice(i, 1);
-	            break;
-	        }
-	    }
-	}
+    
+    	
      resizeMap = function () {
         var column_height = $(window).height();
         $("#map-canvas").css("height",column_height - 40 + "px")
         $(".scrollable, #rightSidebar").css("height",column_height - 90 + "px");
         $("#housesList").css("height",column_height - 180 + "px");
+        $(".scrollableTab").css("height",column_height - 320 + "px");
     };
     $(document).ready(function () {
         resizeMap();
@@ -330,13 +379,31 @@
     	$('#rightSidebar').hide( "slide",{direction:"right",
     		complete: function() {
     			//load new room list from database, set the selected rooms accordingly
-    			$.getJSON('rooms/available/'+place, function(data) {
+    			/*$.getJSON('rooms/available/'+place, function(data) {
     				$("#roomTable").html('<tr><th>Room Number</th><th>Capacity</th><th><i class="icon-chevron-down"></i></th></tr>');
     				data.forEach(function(single) {
     					$("#roomTable").append('<tr id="tr'+single["number"]+'"><td>101</td><td><span class="label label-success">1/1</span></td><td><input type="checkbox" id="ch'+single["number"]+'"></td></tr>');
     				});
-    			});
+    			});*/
+    			
+				$("#roomTable").html('<tr><th>Room Number</th><th>Capacity</th><th><i class="icon-chevron-down"></i></th></tr>');
+				/*roomdata[place].forEach(function(single) {
+					$("#roomTable").append('<tr id="tr'+single[0]+'"><td>101</td><td><span class="label label-success">'+single[1]+'/'+single[1]+'</span></td><td><input type="checkbox" id="ch'+single[0]+'"></td></tr>');
+				});*/
+				roomList = roomdata[place];
+				$("#btnAvailable").html(objLength(roomList) + " rooms available");
+				for(number in roomList) {
 
+					$("#roomTable").append('<tr id="tr'+number+'"><td>'+number+'</td><td><span class="label label-success">'+roomList[number]+'/'+roomList[number]+'</span></td><td><input type="checkbox" id="ch'+number+'"></td></tr>');
+					for(var i=0; i<selectedRooms.length; i++) {
+				        if(JSON.stringify(selectedRooms[i]) == JSON.stringify([place,number])) {
+				        	//alert(place + " " + number + " was saved before, by you!");
+				        	$("#tr"+number).addClass("info");
+				        	$('#tr'+number).find(':checkbox').prop('checked', true);
+				        }
+				    }
+				}
+    			
 
     			$('#rsTab a:first').tab('show');
     			$('#rightSidebar h1').html(place);
@@ -372,13 +439,13 @@
 	    }
     });*/
 	var selectedRooms = [];
-	$('#rooms tr').click(function(event) {
+	$('body').on("click","#rooms tr", function(event) {
 		housingName = $("#rightSidebar h1").text();
 	    if (event.target.type !== 'checkbox') {
 	      $(':checkbox', this).trigger('click');
 	    }
 	    clickID = event.target.id;
-	    if(!clickID=="" && $("#"+clickID).is(':checked')) {
+	    if(clickID.slice(0,2) == "ch" && $("#"+clickID).is(':checked')) {
 	    	selectedRooms.push([housingName,clickID.substring(2)]);
 	    } else if(!$("#"+clickID).is(':checked')) {
 	    	selectedRooms.removeByValue([housingName,clickID.substring(2)]);
@@ -395,47 +462,41 @@
     function selectAll() {
     	if (!saVar) {
     		$('#rooms').find(':checkbox').prop('checked', true);
+    		$('#rooms tr').addClass("info");
     		saVar = true;
     	} else {
     		$('#rooms').find(':checkbox').prop('checked', false);
+    		$('#rooms tr').removeClass("info");
     		saVar = false;
     	}
 
     }
-
+    function clearSelections() {
+    	$('#rooms').find(':checkbox').prop('checked', false);
+    	$('#rooms tr').removeClass("info");
+    	selectedRooms = [];
+    }
 
 
     //HYPOTHETICAL VARIABLE houseRooms !!!  for findFloors and selectFloor
 
-    function findFloors() {
-    	var existingFloors = 0;
-    	houseRooms.forEach(function(room) {
-    		if (room["number"].length == 3) {
-    			if(room["number"].charAt(0) > existingFloors) {
-    				existingFloors = room["number"].charAt(0);
-    			}
-    		} else if (existingFloors == 0) {
-    			existingFloors = 1;
-    		}
-    		
-    	});
-    	return existingFloors;
-    }
-
     function selectFloor(floor) {
     	var roomsToSelect = [];
-    	houseRooms.forEach(function(room) {
-    		if (room["number"].length == 3) {
-    			if(room["number"].charAt(0) == floor) {
-    				roomsToSelect.push(room["number"]);
-    			}
-    		} else if (existingFloors == 0) {
-    			existingFloors = 1;
-    		}
-    	});
+    	for (hall in roomdata) {
+    		if(hall == $("#rightSidebar h1").html()) {
+    			for (room in roomdata[hall]) {
+		    		if (room.length >= 3 && room.substr(-3).charAt(0) == floor) {
+		    				roomsToSelect.push(room);
+		    		}
+		    	}
+	    	}
+    	}
     	roomsToSelect.forEach(function(number) {
     		$('#ch'+number).prop('checked', true);
+    		$('#tr'+number).addClass("info");
+    		selectedRooms.push([$("#rightSidebar h1").html(),number]);
     	});
+    	roomsToSelect=[];
     	//console.log("all rooms checked at the floor number "+floor);
     }
 		
