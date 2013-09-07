@@ -30,6 +30,11 @@
                     border-color:gray;
                     border-width: 1px;
                   }
+                 .scrollableTab {
+                    height:400px;
+                    overflow-y:scroll;
+                    margin-bottom:10px;
+                  }
                 #leftSidebar {
                     position:fixed;
                     top:45px;
@@ -96,7 +101,7 @@
                             });
 
                             //create infowindows for each hall
-                            infowindows[hall[0]] = new google.maps.InfoWindow({content: '<b>'+hall[0] + '</b><p>There are 3 rooms/spots available.<br><a class="moreLink" onclick=\'openRightBar("'+hall[0] +'")\'>More</a></p><img src="' + hall[2] + '">'
+                            infowindows[hall[0]] = new google.maps.InfoWindow({content: '<b>'+hall[0] + '</b><p>There are 3 rooms/spots available. <a class="moreLink" onclick=\'openRightBar("'+hall[0] +'")\'>More</p><img src="' + hall[2] + '"></a>'
                             });
                             //create infowindow eventlistener for each hall
                             //write a loop for each eventlistener to close all infowindows
@@ -186,17 +191,17 @@
           <div class="row-fluid" id="criteria">    
             <div class="span6">
                 <label class="checkbox">
-                    <input type="checkbox"> Residence Halls
+                    <input type="checkbox" id="chResHall"> Residence Halls
                 </label>
                 <label class="checkbox">
-                    <input type="checkbox"> Quiet House
+                    <input type="checkbox" id="chQuiet"> Quiet House
                 </label>
             </div><div class="span6">
                 <label class="checkbox">
-                    <input type="checkbox"> Wooden Frame
+                    <input type="checkbox" id="chWooden"> Wooden Frame
                 </label>
                 <label class="checkbox">
-                    <input type="checkbox"> Program House
+                    <input type="checkbox" id="chProgram"> Program House
                 </label>
             </div>
         </div>
@@ -205,25 +210,58 @@
     <span class="sidebarButton" id="sidebarButton"><i class="icon-search"></i></span>
     <div id="map-canvas"></div>
 
-    <div id="rightSidebar" class="well span3 scrollable">
+    <div id="rightSidebar" class="well span3">
+    <button type="button" class="close" onclick="$('#rightSidebar').hide( 'slide',{direction:'right'} );">&times;</button>
     		<h1>53B Home Avenue</h1>
-            <div id="col2"><h3>Four person house</h3>
-            <unit-description><p><span style="text-decoration: underline;"><b>House furnishings</b></span>:</p>
-            <ul>
-            <li>Common Area: couch, chair, end table and coffee table</li>
-            </ul>
-            <ul>
-            <li>Kitchen: kitchen table, chairs, refrigerator, stove and oven</li>
-            </ul>
-            <ul>
-            <li>Bathroom(s): 1</li>
-            </ul>
-            <ul>
-            <li>Bedrooms: desk, chair, dresser and bookcase</li>
-            </ul>
-            <p>Bed type in each room is as follows:</p>
-            <p>Bedroom 1: full<br>Bedroom 2: full<br>Bedroom 3: full<br>Bedroom 4: full</p>
-        	</unit-description>
+            <div id="col2"><i>Four person housing</i><br>
+            <button id="btnAvailable" class="btn btn-success disabled" type="button"  href="#rooms">3 available rooms</button>
+            <br><br>
+            
+			<ul class="nav nav-tabs" id="rsTab">
+			  <li class="active"><a href="#info">Info</a></li>
+			  <li><a href="#rooms">Rooms</a></li>
+			</ul>
+			 
+			<div class="tab-content">
+			  <div class="tab-pane active scrollableTab" id="info">
+			  	<p><span><b>House furnishings</b></span>:</p>
+	            <ul>
+	            <li>Common Area: couch, chair, end table and coffee table</li>
+	            </ul>
+	            <ul>
+	            <li>Kitchen: kitchen table, chairs, refrigerator, stove and oven</li>
+	            </ul>
+	            <ul>
+	            <li>Bathroom(s): 1</li>
+	            </ul>
+	            <ul>
+	            <li>Bedrooms: desk, chair, dresser and bookcase</li>
+	            </ul>
+	            <p>Bed type in each room is as follows:</p>
+	            <p>Bedroom 1: full<br>Bedroom 2: full<br>Bedroom 3: full<br>Bedroom 4: full</p>
+			  </div>
+			  <div class="tab-pane" id="rooms">
+			  <button class="btn" type="button" onclick="selectAll();">Select All</button>
+			  <div class = 'btn-group'>
+			    <button class = 'btn dropdown-toggle' data-toggle = 'dropdown'>Select All on: <span class = 'caret'></span></button>
+			    <ul class = 'dropdown-menu'>
+			        <li><a onclick="selectFloor(1);">1st floor</a></li>
+			        <li><a onclick="selectFloor(2);">2st floor</a></li>
+			        <li><a onclick="selectFloor(3);">3st floor</a></li>
+			        <li><a onclick="selectFloor(4);">4st floor</a></li>
+			    </ul>
+			</div>​<div class="scrollableTab">
+			  	<table class="table table-striped" id="roomTable">
+		 	<tr><th>Room Number</th><th>Capacity</th><th><i class="icon-chevron-down"></i></th></tr>
+		 	
+		 	<tr id="tr101"><td>101</td><td><span class="label label-success">1/1</span></td><td><input type="checkbox" id="ch101"></td></tr>
+		 	<tr id="tr102"><td>102</td><td><span class="label label-warning">1/3</span></td><td><input type="checkbox" id="ch102"></td></tr>
+		 	<tr id="tr103"><td>103</td><td><span class="label label-warning">1/2</span></td><td><input type="checkbox" id="ch103"></td></tr>
+		 	<tr id="tr104"><td>104</td><td><span class="label label-success">2/2</span></td><td><input type="checkbox" id="ch104"></td></tr>
+				</table></div>
+			  </div>
+			</div>
+
     	</div>
     </div>
 
@@ -261,14 +299,26 @@
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-carousel.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-typeahead.js"></script>
     <script>
+    Array.prototype.removeByValue = function(val) {
+	    for(var i=0; i<this.length; i++) {
+	        if(JSON.stringify(this[i]) == JSON.stringify(val)) {
+	            this.splice(i, 1);
+	            break;
+	        }
+	    }
+	}
      resizeMap = function () {
         var column_height = $(window).height();
         $("#map-canvas").css("height",column_height - 40 + "px")
-        $(".scrollable").css("height",column_height - 90 + "px");
+        $(".scrollable, #rightSidebar").css("height",column_height - 90 + "px");
         $("#housesList").css("height",column_height - 180 + "px");
     };
     $(document).ready(function () {
         resizeMap();
+        $('#rsTab a').click(function (e) {
+		  e.preventDefault();
+		  $(this).tab('show');
+		});
     });
      window.onresize = function(event) {
         resizeMap();
@@ -277,25 +327,117 @@
       $("#leftSidebar").toggle( "slide" );
     });
     function openRightBar(place) {
-   		$('#rightSidebar').show( "slide",{direction:"right"} );
-   		$('#rightSidebar h1').html(place);
+    	$('#rightSidebar').hide( "slide",{direction:"right",
+    		complete: function() {
+    			//load new room list from database, set the selected rooms accordingly
+    			$.getJSON('rooms/available/'+place, function(data) {
+    				$("#roomTable").html('<tr><th>Room Number</th><th>Capacity</th><th><i class="icon-chevron-down"></i></th></tr>');
+    				data.forEach(function(single) {
+    					$("#roomTable").append('<tr id="tr'+single["number"]+'"><td>101</td><td><span class="label label-success">1/1</span></td><td><input type="checkbox" id="ch'+single["number"]+'"></td></tr>');
+    				});
+    			});
 
+
+    			$('#rsTab a:first').tab('show');
+    			$('#rightSidebar h1').html(place);
+    			$('#rightSidebar').show( "slide",{direction:"right"} );
+   				
+    		}} );
    	}
-    $(document).click(function(e){
+    /*$(document).click(function(e){
         if (! $(e.target).closest('#rightSidebar').length && event.target.className!="moreLink") 
             $('#rightSidebar').hide( "slide",{direction:"right"} );
-    });
+    });*/
+
+    var checks;
 
    	$('#criteria input').click (function(){
-	  /*var thisCheck = $(this);
-
-	  if ( thischeck.is(':checked') ) {
-	    // Do stuff
-	  }*/
-	  alert("hey");
+   		checks = {
+   			resHall: $("#chResHall").is(':checked'),
+   			wooden: $("#chWooden").is(':checked'),
+   			quiet: $("#chQuiet").is(':checked'),
+   			program: $("#chProgram").is(':checked')
+   		};
+	 
 	});
-			
 
+   	/*$("#rooms tr").click(function () {
+      $(this).toggleClass("warning");
+          var ele = $(this);
+          var check = $(this).children("input");
+	    if(check.is(':checked')){
+	        check.prop('checked', false);
+	    } else {
+	       	check.prop('checked', true);
+	    }
+    });*/
+	var selectedRooms = [];
+	$('#rooms tr').click(function(event) {
+		housingName = $("#rightSidebar h1").text();
+	    if (event.target.type !== 'checkbox') {
+	      $(':checkbox', this).trigger('click');
+	    }
+	    clickID = event.target.id;
+	    if(!clickID=="" && $("#"+clickID).is(':checked')) {
+	    	selectedRooms.push([housingName,clickID.substring(2)]);
+	    } else if(!$("#"+clickID).is(':checked')) {
+	    	selectedRooms.removeByValue([housingName,clickID.substring(2)]);
+	    }
+	    $('#rooms tr').removeClass("info");
+	    selectedRooms.forEach(function(roomArray) {
+	    	$("#tr"+roomArray[1]).addClass("info");
+	    });
+    //$(this).toggleClass('warning');
+  	});
+
+
+   	var saVar = false;
+    function selectAll() {
+    	if (!saVar) {
+    		$('#rooms').find(':checkbox').prop('checked', true);
+    		saVar = true;
+    	} else {
+    		$('#rooms').find(':checkbox').prop('checked', false);
+    		saVar = false;
+    	}
+
+    }
+
+
+
+    //HYPOTHETICAL VARIABLE houseRooms !!!  for findFloors and selectFloor
+
+    function findFloors() {
+    	var existingFloors = 0;
+    	houseRooms.forEach(function(room) {
+    		if (room["number"].length == 3) {
+    			if(room["number"].charAt(0) > existingFloors) {
+    				existingFloors = room["number"].charAt(0);
+    			}
+    		} else if (existingFloors == 0) {
+    			existingFloors = 1;
+    		}
+    		
+    	});
+    	return existingFloors;
+    }
+
+    function selectFloor(floor) {
+    	var roomsToSelect = [];
+    	houseRooms.forEach(function(room) {
+    		if (room["number"].length == 3) {
+    			if(room["number"].charAt(0) == floor) {
+    				roomsToSelect.push(room["number"]);
+    			}
+    		} else if (existingFloors == 0) {
+    			existingFloors = 1;
+    		}
+    	});
+    	roomsToSelect.forEach(function(number) {
+    		$('#ch'+number).prop('checked', true);
+    	});
+    	//console.log("all rooms checked at the floor number "+floor);
+    }
 		
 </script>
 
