@@ -2,7 +2,6 @@ import sqlite3
 import json
 import re
 
-
 def connect_db():
     return sqlite3.connect('db/courses.db')
 
@@ -18,23 +17,22 @@ def build_course_summary_obj(row):
     title = row[3]
     code = row[9] + row[6]
     departmentCode = row[9]
-    
     return {'id': courseid, 'title': title, 'code': code, 'departmentCode': departmentCode}
 
 def build_full_course_obj(row):
     return { '_uid': row[0],
-             'genEdArea': row[1],
-             'prerequisites': row[2],
-             'title': row[3],
-             'url': row[4],
-             'credit': row[5],
-             'number': row[6],
-             'courseid': row[7],
-             'semester': row[8],
-             'department': row[9],
-             'gradingMode': row[10],
-             'description': row[11],
-             'sections': [] }
+    'genEdArea': row[1],
+    'prerequisites': row[2],
+    'title': row[3],
+    'url': row[4],
+    'credit': row[5],
+    'number': row[6],
+    'courseid': row[7],
+    'semester': row[8],
+    'department': row[9],
+    'gradingMode': row[10],
+    'description': row[11],
+    'sections': [] }
 	
 def build_full_section_obj(row):
 	return { '_uid': row[0],
@@ -55,24 +53,21 @@ def build_full_section_obj(row):
 	'major_readings': row[16],
 	'enrollmentLimit': row[17],
 	'assignments_and_examinations': row[18] }
-	
-def get_courses_from_cursor(res):
-    ret = []
-    for result in res:
-        ret.append(build_course_obj(result))
+
+def get_all_courses(conn):
+    ret = {}
+    c = conn.cursor()
+    for courseid in range(int(c.execute("select COUNT(*) from courses").next()[0])):
+        summary = get_course_summary(conn, courseid)
+        summary['stars'] = count_stars(courseid)
+        summary['instructors'] = get_instructors_for_course(conn, courseid)
+        ret[summary['id']] = summary
     return ret
 
-def get_all_courses():
-    return c.execute('select * from courses')
-
-# def search_for_course_by_title(conn, term):
-#     c = conn.cursor()
-#     return c.execute("""
-#       select * from courses
-#       where ( title like '%s%'
-#       or department like '%s%'
-#       ) and semester = 'Fall 2013'
-#     """  % (term, term) )
+def get_course_summary(conn, courseid):
+    c = conn.cursor()
+    summary = build_course_summary_obj(c.execute("select * from courses where _uid = " + str(courseid)).next())
+    return summary
 
 def search_for_course_by_title(conn, term):
     c = conn.cursor()
@@ -93,22 +88,6 @@ def search_for_course_by_code(conn, code):
             print 'potCode', courseCode
             ret.append(row[0])
     return ret
-#     m = re.search(r'[0-9]', code)
-
-#     if m:
-#         idx = m.start()
-#         dept = code[:idx]
-#         num = code[idx:]
-#     else:
-#         dept = code
-#         num = ''
-
-#     print 'by code', dept, num
-
-#     c = conn.cursor()
-#     return c.execute("""
-#       select _uid from courses
-#       where (number like %""" + num + "% or upper(department) like upper("""+dept+"""))""")
 
 def search_for_course_by_professor(conn, professor):
     c = conn.cursor()
@@ -123,14 +102,6 @@ def search_for_course_by_professor(conn, professor):
     else:
         return []
 
-def get_course_summary(conn, courseid):
-    c = conn.cursor()
-    
-    summary = build_course_summary_obj( c.execute("select * from courses where _uid = " + str(courseid)).next() )
-    
-    #summary['sections'] = get_section_ids_for_course(conn, courseid)
-    return summary
-
 def get_times_for_section(conn, sectionid):
     c = conn.cursor()
     return c.execute("select times from sections where _uid = " + str(sectionid)).next()[0]
@@ -138,14 +109,6 @@ def get_times_for_section(conn, sectionid):
 def get_sections_for_course(conn, courseid):
     c = conn.cursor()
     return c.execute("select * from sections where course_uid = " + str(courseid))
-
-def get_section_ids_for_course(conn, courseid):
-    c = conn.cursor()
-    return c.execute("select _uid from sections where course_uid = " + str(courseid))
-
-def get_sections_and_times_for_course(conn, courseid):
-    c = conn.cursor()
-    return c.execute("select times from sections where course_uid = " + str(courseid)).next()[0]
 
 def get_courseids_for_all_sections(conn):
     c = conn.cursor()
@@ -178,18 +141,6 @@ def get_instructor(conn, inst_id):
         'name': row[1],
         'rating': row[2]
         }
-        
-def get_instructors_for_section(conn, section):
-    c = conn.cursor()
-    prof_string = c.execute("select professor from sections where _uid = " + str(section)).next()[0]
-
-    instructors = []
-
-    for professor in prof_string.split(';'):
-        if not professor: continue
-        instructors.append( get_instructor(conn, professor) )
-
-    return instructors
 
 def get_instructors_for_course(conn, courseid):
     c = conn.cursor()

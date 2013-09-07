@@ -248,20 +248,7 @@ def get_current_courses():
                 courses.append(course)
     return courses
 
-def get_all_courses():
-    courses = []
-    for year_page_url in year_pages.values():
-        courses_offered_urls = get_courses_offered_urls_from_year_page(year_page_url)
-        for courses_offered_url in courses_offered_urls:
-            course_urls = get_course_urls_from_courses_offered_page(courses_offered_url)
-            for course_url in course_urls:
-                course = get_course_info_from_course_page(course_url)
-                print "Adding", course['title'], course['description'], get_all_instructors_for_course(course)
-                courses.append(get_course_info_from_course_page(course_url))
-    return courses
-
 if __name__ == '__main__':
-    #courses = get_all_courses()
     courses = get_current_courses()
     open('courses.json', 'w').write(simplejson.dumps(courses))
     open('instructors.json', 'w').write(simplejson.dumps(professors))
