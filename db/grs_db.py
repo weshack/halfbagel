@@ -2,7 +2,7 @@ import sqlite3
 import json
 import re
 
-conn = sqlite3.connect('db/couch.db')
+conn = sqlite3.connect('db/grs.db')
 
 def build_residence_obj(row):
     return { 
@@ -53,7 +53,7 @@ def build_selection_obj(row):
 def get_all_residences(conn):
     residences = {}
     c = conn.cursor()
-    for residence_id in range(int(c.execute("select COUNT(*) from residence").next()[0])):
+    for residence_id in range(int(c.execute("SELECT COUNT(*) FROM residences").next()[0])):
         residence = get_residence_by_id(conn, residence_id)
         residences[residence['id']] = residence
     return ret
@@ -61,7 +61,7 @@ def get_all_residences(conn):
 def get_residences_by_unit_size(conn, unit_size):
     residences = {}
     c = conn.cursor()
-    for residence_id in range(int(c.execute("select COUNT(*) from residence").next()[0])):
+    for residence_id in range(int(c.execute("SELECT COUNT(*) FROM residences").next()[0])):
         residence = get_residence_by_id(conn, residence_id)
         if residence['units'] == unit_size:
             residences[residence['id']] = residence
@@ -70,7 +70,7 @@ def get_residences_by_unit_size(conn, unit_size):
 def get_residences_by_wood_status(conn, wood_status):
     residences = {}
     c = conn.cursor()
-    for residence_id in range(int(c.execute("select COUNT(*) from residence").next()[0])):
+    for residence_id in range(int(c.execute("SELECT COUNT(*) FROM residences").next()[0])):
         residence = get_residence_by_id(conn, residence_id)
         if residence['wood'] == 1:
             residences[residence['id']] = residence
@@ -78,13 +78,13 @@ def get_residences_by_wood_status(conn, wood_status):
 
 def get_residence_by_id(conn, residence_id):
     c = conn.cursor()
-    residence = build_residence_obj(c.execute("select * from residence where _uid = " + str(residence_id)).next())
+    residence = build_residence_obj(c.execute("SELECT * FROM residences WHERE _uid = " + str(residence_id)).next())
     return residence
 
 def get_residence_by_location(conn, term):
     c = conn.cursor()
-    return c.execute("""select _uid from residence where (lower(name) like lower(""" + json.dumps("%"+term+"%")+ """))""")
+    return c.execute("""SELECT _uid FROM residences WHERE (lower(name) LIKE lower(""" + json.dumps("%"+term+"%")+ """))""")
 
 def get_room_by_size(conn, size):
     c = conn.cursor()
-    return c.execute("select _uid from room where size = " + str(size)).next())
+    return c.execute("SELECT _uid FROM rooms WHERE size = " + str(size)).next())

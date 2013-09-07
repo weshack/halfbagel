@@ -1,42 +1,53 @@
-CREATE TABLE residence (
+DROP TABLE IF EXISTS residences;
+DROP TABLE IF EXISTS rooms;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS selections;
+
+CREATE TABLE residences (
 _uid INTEGER PRIMARY KEY,
 location TEXT,
+image TEXT,
+description TEXT,
 program INTEGER,
 quiet INTEGER,
+wood INTEGER,
+units INTEGER,
 restriction INTEGER,
-description TEXT,
-image TEXT,
 geo_x REAL,
-geo_y REAL,
-wood INTEGER, 
-units INTEGER
-)
+geo_y REAL
+);
 
-CREATE TABLE room (
+CREATE TABLE rooms (
 _uid INTEGER PRIMARY KEY,
-FOREIGN KEY(residence_id) REFERENCES residence(_uid),
+residence_id INTEGER,
 room_number INTEGER,
-size INTEGER
-)
+size INTEGER,
+FOREIGN KEY(residence_id) REFERENCES residences(_uid)
+);
 
-CREATE TABLE group (
+CREATE TABLE groups (
 _uid INTEGER PRIMARY KEY,
 name TEXT,
 size INTEGER
-)
+);
 
-CREATE TABLE student (
+CREATE TABLE students (
 _uid INTEGER PRIMARY KEY,
-FOREIGN KEY(group_id) REFERENCES group(_uid),
+group_id INTEGER,
 student_id TEXT,
 forename TEXT,
-surname TEXT
-)
+surname TEXT,
+FOREIGN KEY(group_id) REFERENCES groups(_uid)
+);
 
-CREATE TABLE selection (
+CREATE TABLE selections (
 _uid INTEGER PRIMARY KEY,
-FOREIGN KEY(group_id) REFERENCES group(_uid),
-FOREIGN KEY(room_id) REFERENCES group(_uid),
-FOREIGN KEY(student_id) REFERENCES group(_uid),
-priority INTEGER
-)
+priority INTEGER,
+group_id INTEGER,
+room_id INTEGER,
+student_id INTEGER,
+FOREIGN KEY(group_id) REFERENCES groups(_uid),
+FOREIGN KEY(room_id) REFERENCES rooms(_uid),
+FOREIGN KEY(student_id) REFERENCES students(_uid)
+);
