@@ -253,10 +253,10 @@
 			</div>​<div class="scrollableTab">
 			  	<table class="table table-striped ">
 		 	<tr><th>Room Number</th><th>Capacity</th><th><i class="icon-chevron-down"></i></th></tr>
-		 	<tr><td>101</td><td><span class="label label-success">1/1</span></td><td><input type="checkbox"></td></tr>
-		 	<tr><td>102</td><td><span class="label label-warning">1/3</span></td><td><input type="checkbox"></td></tr>
-		 	<tr><td>103</td><td><span class="label label-warning">1/2</span></td><td><input type="checkbox"></td></tr>
-		 	<tr><td>104</td><td><span class="label label-success">2/2</span></td><td><input type="checkbox"></td></tr>
+		 	<tr><td>101</td><td><span class="label label-success">1/1</span></td><td><input type="checkbox" id="ch101"></td></tr>
+		 	<tr><td>102</td><td><span class="label label-warning">1/3</span></td><td><input type="checkbox" id="ch102"></td></tr>
+		 	<tr><td>103</td><td><span class="label label-warning">1/2</span></td><td><input type="checkbox" id="ch104"></td></tr>
+		 	<tr><td>104</td><td><span class="label label-success">2/2</span></td><td><input type="checkbox" id="ch105"></td></tr>
 
 				</table></div>
 			  </div>
@@ -368,9 +368,41 @@
     	}
 
     }
-    function selectFloor(floor) {
 
-    	console.log("all rooms checked at the floor number "+floor);
+
+
+    //HYPOTHETICAL VARIABLE houseRooms !!!  for findFloors and selectFloor
+
+    function findFloors() {
+    	var existingFloors = 0;
+    	houseRooms.forEach(function(room) {
+    		if (room["number"].length == 3) {
+    			if(room["number"].charAt(0) > existingFloors) {
+    				existingFloors = room["number"].charAt(0);
+    			}
+    		} else if (existingFloors == 0) {
+    			existingFloors = 1;
+    		}
+    		
+    	});
+    	return existingFloors;
+    }
+
+    function selectFloor(floor) {
+    	var roomsToSelect = [];
+    	houseRooms.forEach(function(room) {
+    		if (room["number"].length == 3) {
+    			if(room["number"].charAt(0) == floor) {
+    				roomsToSelect.push(room["number"]);
+    			}
+    		} else if (existingFloors == 0) {
+    			existingFloors = 1;
+    		}
+    	});
+    	roomsToSelect.forEach(function(number) {
+    		$('#ch'+number).prop('checked', true);
+    	});
+    	//console.log("all rooms checked at the floor number "+floor);
     }
 		
 </script>
