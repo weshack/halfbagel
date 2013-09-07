@@ -88,3 +88,6 @@ def get_residence_by_location(conn, term):
 def get_room_by_size(conn, size):
     c = conn.cursor()
     return c.execute("SELECT _uid FROM rooms WHERE size = " + str(size)).next())
+def get_group_id(conn, student_id):
+    c = conn.cursor()
+    return c.execute("SELECT group_id FROM students WHERE _uid = " + str(student_id)).next())
