@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>GRS+
+    <title>HalfBagel
     </title>
     <meta
     name="viewport"
@@ -161,10 +161,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">GRS+</a>
+          <a class="brand" href="#">HalfBagel</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-            	<li class="active"><a href="#" id="toolbarName">You have a group</a></li>
+            	<li class="active" id="toolbarGroup" style="display:none"><a href="#">You're in a group</a></li>
+            	<li class="active" id="toolbarRooms" style="display:none"><a href="#">You have chosen rooms</a></li>
             </ul>
           </div><!--/.nav-collapse -->
           <div class="nav-collapse collapse pull-right">
@@ -240,7 +241,7 @@
     <div id="rightSidebar" class="well span3">
     <button type="button" class="close" onclick="$('#rightSidebar').hide( 'slide',{direction:'right'} );">&times;</button>
     		<h1>53B Home Avenue</h1>
-            <div id="col2"><i>Four person housing</i><br>
+            <div id="col2"><i>Residence hall</i><br>
             <button id="btnAvailable" class="btn btn-success disabled" type="button"  href="#rooms">3 available rooms</button>
             <br><br>
             
@@ -300,7 +301,7 @@
     <h3 id="myModalLabel">About the project</h3>
   </div>
   <div class="modal-body">
-    <p>A better general room selection (GRS) application for any university students; implemented as part of <a href="http://weshack.com/">WesHack 2013 2.0</a> by 
+    <p><b>HalfBagel</b> is a better general room selection (GRS) application for any university students; implemented as part of <a href="http://weshack.com/">WesHack 2013 2.0</a> by 
     <ul><li>Arthur Burkart,</li> <li>Tyler Harden,</li> <li>Cumhur Korkut,</li> <li>Wei Wang.</li></ul></p>
   </div>
   <div class="modal-footer">
@@ -323,16 +324,16 @@
 		<div class="tab-content">
 		  <div class="tab-pane active" id="newgroup">
 		  	<div class="input-append">
-			  <input class="span3" id="useremail" type="text" placeholder="Enter your @wesleyan.edu user name"><span class="add-on">@wesleyan.edu</span>
-			  <button class="btn" type="button"><i class="icon-plus"></i> Create</button>
+			  <input class="span3" id="useremailcreate" type="text" placeholder="Enter your @wesleyan.edu user name"><span class="add-on">@wesleyan.edu</span>
+			  <button class="btn" type="button" onclick="createGroup();"><i class="icon-plus"></i> Create</button>
 			</div>
 			<p>Your unique <b>Group ID</b> will be sent to you via e-mail. Since <b>Group ID</b> is the only requirement to join a group, please don't share your Group ID with anyone other than the ones with whom you plan to be in the same group.</p>
 		  </div>
 		  <div class="tab-pane" id="join">
 		  	<p>The unique <b>Group ID</b> will provide you access to join a group.</p>
 		  	<div class="input-append">
-			  <p><input class="span3" id="useremail" type="text" placeholder="Enter your @wesleyan.edu user name"><span class="add-on">@wesleyan.edu</span></p>
-			  <p><input class="span4" id="usergroupid" type="text" placeholder="Enter the Group ID of the group you want to join"><button class="btn btn-primary" type="button"><i class="icon-ok icon-white"></i> Join</button></p>
+			  <p><input class="span3" id="useremailjoin" type="text" placeholder="Enter your @wesleyan.edu user name"><span class="add-on">@wesleyan.edu</span></p>
+			  <p><input class="span4" id="usergroupid" type="text" placeholder="Enter the Group ID of the group you want to join"><button class="btn btn-primary" type="button" onclick="joinGroup();"><i class="icon-ok icon-white"></i> Join</button></p>
 			  
 			</div>
 			
@@ -365,7 +366,7 @@
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-carousel.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-typeahead.js"></script>
     <script>
-    
+
     	
      resizeMap = function () {
         var column_height = $(window).height();
@@ -455,6 +456,22 @@
 	    }
     });*/
 	var selectedRooms = [];
+	function selectedToolbarCheck() {
+    	if(selectedRooms.length > 0) {
+    		$("#toolbarRooms").show();
+    	} else {
+    		$("#toolbarRooms").hide();
+    	}
+    }
+    function groupToolbarCheck() {
+    	if(booleanGroup == true) {
+    		$("#toolbarRooms").show();
+    	} else {
+    		$("#toolbarRooms").hide();
+    	}
+    }
+
+
 	$('body').on("click","#rooms tr", function(event) {
 		housingName = $("#rightSidebar h1").text();
 	    if (event.target.type !== 'checkbox') {
@@ -470,10 +487,8 @@
 	    selectedRooms.forEach(function(roomArray) {
 	    	$("#tr"+roomArray[1]).addClass("info");
 	    });
+	    selectedToolbarCheck();
     //$(this).toggleClass('warning');
-  	});
-  	$("body").on("click","#selectableGroups button",function(event) {
-
   	});
 
 
@@ -482,18 +497,23 @@
     	if (!saVar) {
     		$('#rooms').find(':checkbox').prop('checked', true);
     		$('#rooms tr').addClass("info");
+    		for(roomNumber in roomdata[$("#rightSidebar h1").html()]) {
+    			selectedRooms.push([$("#rightSidebar h1").html(),roomNumber]);
+    		}
     		saVar = true;
     	} else {
     		$('#rooms').find(':checkbox').prop('checked', false);
     		$('#rooms tr').removeClass("info");
+    		selectedRooms = [];
     		saVar = false;
     	}
-
+    	selectedToolbarCheck();
     }
     function clearSelections() {
     	$('#rooms').find(':checkbox').prop('checked', false);
     	$('#rooms tr').removeClass("info");
     	selectedRooms = [];
+    	selectedToolbarCheck();
     }
 
 
@@ -516,6 +536,7 @@
     		selectedRooms.push([$("#rightSidebar h1").html(),number]);
     	});
     	roomsToSelect=[];
+    	selectedToolbarCheck();
     	//console.log("all rooms checked at the floor number "+floor);
     }
 		
