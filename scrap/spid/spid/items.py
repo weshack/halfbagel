@@ -6,4 +6,12 @@
 from scrapy.item import Item, Field
 
 class Residence(Item):
-	link = Field()
+	location = Field()
+	description = Field()
+	program = Field()
+	quiet = Field()
+	wood = Field()
+	units = Field()
+	images = Field()
+	floorplans = Field()
+
