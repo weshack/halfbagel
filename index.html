@@ -248,10 +248,11 @@
 			  <div class = 'btn-group'>
 			    <button class = 'btn dropdown-toggle' data-toggle = 'dropdown'>Select All on: <span class = 'caret'></span></button>
 			    <ul class = 'dropdown-menu'>
-			        <li><a onclick="selectFloor(1);">1st floor</a></li>
-			        <li><a onclick="selectFloor(2);">2st floor</a></li>
-			        <li><a onclick="selectFloor(3);">3st floor</a></li>
-			        <li><a onclick="selectFloor(4);">4st floor</a></li>
+			        <li><a onclick="selectFloor('1');">1st floor</a></li>
+			        <li><a onclick="selectFloor('2');">2st floor</a></li>
+			        <li><a onclick="selectFloor('3');">3st floor</a></li>
+			        <li><a onclick="selectFloor('4');">4st floor</a></li>
+			        <li><a onclick="clearSelections();">Clear selections</a></li>
 			    </ul>
 			</div>​<div class="scrollableTab">
 			  	<table class="table table-striped" id="roomTable">
@@ -468,40 +469,32 @@
     	}
 
     }
-
+    function clearSelections() {
+    	$('#rooms').find(':checkbox').prop('checked', false);
+    	$('#rooms tr').removeClass("info");
+    	selectedRooms = [];
+    }
 
 
     //HYPOTHETICAL VARIABLE houseRooms !!!  for findFloors and selectFloor
 
-    function findFloors() {
-    	var existingFloors = 0;
-    	houseRooms.forEach(function(room) {
-    		if (room["number"].length == 3) {
-    			if(room["number"].charAt(0) > existingFloors) {
-    				existingFloors = room["number"].charAt(0);
-    			}
-    		} else if (existingFloors == 0) {
-    			existingFloors = 1;
-    		}
-    		
-    	});
-    	return existingFloors;
-    }
-
     function selectFloor(floor) {
     	var roomsToSelect = [];
-    	houseRooms.forEach(function(room) {
-    		if (room["number"].length == 3) {
-    			if(room["number"].charAt(0) == floor) {
-    				roomsToSelect.push(room["number"]);
-    			}
-    		} else if (existingFloors == 0) {
-    			existingFloors = 1;
-    		}
-    	});
+    	for (hall in roomdata) {
+    		if(hall == $("#rightSidebar h1").html()) {
+    			for (room in roomdata[hall]) {
+		    		if (room.length >= 3 && room.substr(-3).charAt(0) == floor) {
+		    				roomsToSelect.push(room);
+		    		}
+		    	}
+	    	}
+    	}
     	roomsToSelect.forEach(function(number) {
     		$('#ch'+number).prop('checked', true);
+    		$('#tr'+number).addClass("info");
+    		selectedRooms.push([$("#rightSidebar h1").html(),number]);
     	});
+    	roomsToSelect=[];
     	//console.log("all rooms checked at the floor number "+floor);
     }
 		
