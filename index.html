@@ -57,9 +57,14 @@
                     z-index: 1000;
                 }
             </style>
+            <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
             <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
                 <script>
                 	//load the database
+                	var roomdata;
+			    	$.getJSON('roomdata.json', function(data) {
+			    		roomdata=data;
+			    	});
                 	var objLength = function(obj){    
 						    var key,len=0;
 						    for(key in obj){
@@ -333,7 +338,7 @@
  <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-alert.js"></script>
@@ -348,10 +353,7 @@
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-carousel.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-typeahead.js"></script>
     <script>
-    var roomdata;
-    	$.getJSON('roomdata.json', function(data) {
-    		roomdata=data;
-    	});
+    
     	
      resizeMap = function () {
         var column_height = $(window).height();
