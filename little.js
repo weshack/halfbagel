@@ -1,3 +1,42 @@
+    jQuery.expr[':'].Contains = function (a, i, m) {
+        return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+    };
+
+ 
+function search() {
+	var list = $("#ulHouses");
+    var filter = $("#searchBox").val();
+    if (filter) {
+        $(list).find("a:not(:Contains(" + filter + "))").parent().addClass("hide");
+        $(list).find("a:not(:Contains(" + filter + "))").parent().prev(".nav-header").addClass("hide");
+    	$(list).find("a:Contains(" + filter + ")").parent().prev(".nav-header").removeClass("hide");
+        $(list).find("a:Contains(" + filter + ")").parent().removeClass("hide");
+
+    } else {
+        $(list).find("li").removeClass("hide");
+        $("#noResults, #liEnd").hide();
+
+    }
+}
+
+function sortObject(o) {
+    var sorted = {},
+    key, a = [];
+
+    for (key in o) {
+        if (o.hasOwnProperty(key)) {
+                a.push(key);
+        }
+    }
+
+    a.sort();
+
+    for (key = 0; key < a.length; key++) {
+        sorted[a[key]] = o[a[key]];
+    }
+    return sorted;
+}
+
 var useremail;
 function joinGroup() {
 	var email = $("#useremailjoin").val();
