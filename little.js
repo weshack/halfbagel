@@ -1,5 +1,7 @@
+var useremail;
 function joinGroup() {
 	var email = $("#useremailjoin").val();
+	useremail = email;
 	var groupid = $("#usergroupid").val();
 	$.ajax({
 	  type: "GET",
@@ -22,6 +24,7 @@ function joinGroup() {
 
 function createGroup() {
 	var email = $("#useremailcreate").val();
+	useremail = email;
 	JSON.stringify(selectedRooms)
 	$.ajax({
 	  type: "GET",

@@ -80,15 +80,80 @@
 			    		roomdata=data;
 			    	});
 			    	var housedata;
-
+			    	function leftListAddAccordingly(house) {
+			    			if(house["program"]==true) {
+			    				$("#liProgram").after("<li><a href='#'>"+house["location"]+"</a></li>");
+			    			} else if(house["wood"]==true) {
+			    				
+			    				$("#li"+house["units"]+"PH").after("<li><a href='#'>"+house["location"]+"</a></li>");
+			    			}
+			    			//alert(house["program"]==false && house["wood"]==false);
+			    			if(house["program"]==false && house["wood"]==false) {
+			    				$("#liResidence").after("<li><a href='#'>"+house["location"]+"</a></li>");
+			    			}
+			    	}
 			    	$.getJSON('example.json', function(data) {
 			    		housedata=data["results"];
 			    		housedata.forEach(function(house){
-			    			$("#ulHouses").append("<li><a href='#'>"+house["location"]+"</a></li>");
+			    			leftListAddAccordingly(house);
+			    			//$("#ulHouses").append("<li><a href='#'>"+house["location"]+"</a></li>");
 			    			//alert(house["description"]);
 			    			houseDescription[house["location"]] = house["description"];
 			    		});
 			    	});
+			    	var filteredData;
+			    	$("#criteria label").click(function(event) {
+			    		criteriaUpdate();
+			    	});
+			    	//.nextUntil(".nav-header") will be used for deleting
+					function criteriaUpdate() {
+						var filteredData;
+						$("#ulHouses li:not(.nav-header)").remove(); //delete the house li tags, but not header li's
+						var howManyChecked = $("#criteria input:checked").length;
+						if(howManyChecked == 0) {
+							housedata.forEach(function(house) {
+								leftListAddAccordingly(house);
+							});
+							
+						} else if(howManyChecked > 1) {
+							if(chQuiet==true && howManyChecked==2) {
+								//quiet and other
+								housedata.forEach(function(house) {
+									if(chProgram == house["program"] && chProgram == true) {
+										filteredData.push(house);
+									} else if(chWooden == house["wood"] && chWooden == true) {
+										filteredData.push(house);
+									} else if(house["wood"] == false && house["program"] == false) {
+										filteredData.push(house);
+									}
+								});
+			    			} else {
+			    				//$("#ulHouses ").removeClass("hide");
+			    				$("#noResults").removeClass("hide");
+			    			}
+						} else {
+							if(chResHall==true) {
+			    				$("#ulHouses dyn").hide();
+			    				$("#ulResidenceIn").html("some stuff");
+			    				$("ulResidence").show();
+			    			}
+			    			if(chQuiet==true) {
+			    				$("#ulHouses span").hide();
+			    				$("#ulResidenceIn").html("some stuff");
+			    				$("ulResidence").show();
+			    			}
+			    			if(chProgram==true) {
+			    				$("#ulHouses span").hide();
+			    				$("#ulProgramIn").html("some stuff");
+			    				$("ulProgram").show();
+			    			}
+			    			if(chWooden==true) {
+			    				$("#ulHouses span").hide();
+			    				$("#ul"+house["units"]+"PH").html("some stuff")
+			    				$("ulWood").show();
+			    			}
+			    		}
+					}
                 	var objLength = function(obj){    
 						    var key,len=0;
 						    for(key in obj){
@@ -114,8 +179,6 @@
                         ['West College', false, 'http://www.wesleyan.edu/reslife/housing/residence/West_College_1.jpg', 41.554104, -72.6590762]
                     ];
 
-
-
                     var map;
                     function getIcon(boolVar) {
                         if (boolVar == true) {
@@ -134,27 +197,27 @@
                             mapTypeId: google.maps.MapTypeId.ROADMAP
                         });
 
-                        addresses.forEach(function (hall) {
+                        housedata.forEach(function (hall) {
                             //get latlng for each hall ->decided to store them in database
-                            mapLatLngs[hall[0]] = new google.maps.LatLng(hall[3], hall[4]);
+                            mapLatLngs[hall["location"]] = new google.maps.LatLng(hall["geo_x"], hall["geo_y"]);
                             //create markers for each hall according to their availability
-                            markers[hall[0]] = new google.maps.Marker({
-                                position: mapLatLngs[hall[0]],
-                                icon: getIcon(hall[1]),
+                            markers[hall["location"]] = new google.maps.Marker({
+                                position: mapLatLngs[hall["location"]],
+                                icon: getIcon(true),
                                 map: map,
-                                title: hall[0]
+                                title: hall["location"]
                             });
 
                             //create infowindows for each hall
-                            infowindows[hall[0]] = new google.maps.InfoWindow({content: '<b>'+hall[0] + '</b><p>There are '+objLength(roomdata[hall[0]])+' rooms/spots available. <a class="moreLink" onclick=\'openRightBar("'+hall[0] +'")\'>More</p><img src="' + hall[2] + '"></a>'
+                            infowindows[hall["location"]] = new google.maps.InfoWindow({content: '<b>'+hall["location"] + '</b><p>There are '+objLength(roomdata[hall["location"]])+' rooms/spots available. <a class="moreLink" onclick=\'openRightBar("'+hall["location"] +'")\'>More</p><img src="' + hall["image"] + '"></a>'
                             });
                             //create infowindow eventlistener for each hall
                             //write a loop for each eventlistener to close all infowindows
-                            google.maps.event.addListener(markers[hall[0]], 'click', function () {
+                            google.maps.event.addListener(markers[hall["location"]], 'click', function () {
                                 for (hallName in infowindows) {
                                     infowindows[hallName].close();
                                 }
-                                infowindows[hall[0]].open(map, markers[hall[0]]);
+                                infowindows[hall["location"]].open(map, markers[hall["location"]]);
                             });
                         });
                     }
@@ -212,7 +275,16 @@
 
         <div class="sidebar-nav scrollable" id="housesList">
             <ul class="nav nav-list" id="ulHouses">
-              <li class="nav-header">Residence Halls</li>
+              <li class="nav-header hide" id="noResults">No results found.</li>
+              <li class="nav-header" id="liResidence">Residence Halls</li>
+              <li class="nav-header" id="li1PH">1 Person Houses</li>
+              <li class="nav-header" id="li2PH">2 Person Houses</li>
+              <li class="nav-header" id="li3PH">3 Person Houses</li>
+              <li class="nav-header" id="li4PH">4 Person Houses</li>
+              <li class="nav-header" id="li5PH">5 Person Houses</li>
+              <li class="nav-header" id="li6PH">6 Person Houses</li>
+              <li class="nav-header" id="liProgram">Program Houses</li>
+
               <!--<li class="active"><a href="#">53B Home Avenue</a></li>
               <li class="nav-header">2 Person Houses</li>
               <li><a href="#">162A Church Street</a></li>
@@ -269,7 +341,7 @@
             <br><br>
             
 			<ul class="nav nav-tabs" id="rsTab">
-			  <li class="active"><a href="#info">Info</a></li>
+			  <li class="active"><a href="#rightInfo">Info</a></li>
 			  <li><a href="#rooms">Rooms</a></li>
 			</ul>
 			 
@@ -338,13 +410,14 @@
     <h3 id="myModalLabel">Register your selections</h3>
   </div>
   <div class="modal-body">
+  <div class="input-append">
+	  <input class="span3" id="useremailcreate" type="text" placeholder="Enter your @wesleyan.edu user name"><span class="add-on">@wesleyan.edu</span>
+	  <button class="btn" type="button" onclick="createGroup();"><i class="icon-plus"></i> Register</button>
+	</div>
+	<p>Your Wesleyan e-mail address is required for registration verification.</p>
     <p>The rooms you have selected are these:</p>
     <div id="modalSelectedRooms"></div><br>
-    <div class="input-append">
-			  <input class="span3" id="useremailcreate" type="text" placeholder="Enter your @wesleyan.edu user name"><span class="add-on">@wesleyan.edu</span>
-			  <button class="btn" type="button" onclick="createGroup();"><i class="icon-plus"></i> Register</button>
-			</div>
-			<p>Your Wesleyan e-mail address is required for registration verification.</p>
+    
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -361,7 +434,7 @@
 	  
 		<ul class="nav nav-tabs" id="groupTab">
 		  <li style="display:none;" id="groupsCurrentTab"><a href="#currentgroup"><i class="icon-user"></i>  Your current group</a>
-		  <li class="active"><a href="#newgroup"><i class="icon-plus"></i> Create your group</a></li>
+		  <li class="active"><a href="#newgroup" id="createGroupTab"><i class="icon-plus"></i> Create your group</a></li>
 		  <li><a href="#join"><i class="icon-ok"></i>  Join another group</a></li>
 		  </li>
 		</ul>
@@ -415,12 +488,18 @@
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-carousel.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-typeahead.js"></script>
     <script>
-    if(selectedRooms > 0) {
+    if(selectedRooms.length > 0) {
 		$("#toolbarRooms").show();
 	}
     function showCurrentGroupTab() {
+    	$("#toolbarGroup").show();
 		$("#groupsCurrentTab").show();
    		$('#groupTab a:first').tab('show');
+    }
+    function leaveGroup() {
+    	$("#toolbarGroup").hide();
+		$("#groupsCurrentTab").hide();
+   		$('#groupTab #createGroupTab').tab('show');
     }
     	
      resizeMap = function () {
