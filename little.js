@@ -9,14 +9,16 @@ function search() {
     if (filter) {
         $(list).find("a:not(:Contains(" + filter + "))").parent().addClass("hide");
         $(list).find("a:not(:Contains(" + filter + "))").parent().prev(".nav-header").addClass("hide");
-    	$(list).find("a:Contains(" + filter + ")").parent().prev(".nav-header").removeClass("hide");
+    	$(list).find("a:Contains(" + filter + ")").parent().prevAll(".nav-header:first").removeClass("hide");
         $(list).find("a:Contains(" + filter + ")").parent().removeClass("hide");
+
 
     } else {
         $(list).find("li").removeClass("hide");
-        $("#noResults, #liEnd").hide();
+        $("#noResults").addClass("hide");
 
     }
+    $("#liEnd").addClass("hide");
 }
 
 function sortObject(o) {
