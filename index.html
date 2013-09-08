@@ -64,11 +64,11 @@
 
             <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
                 <script>
-                  $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {   
+                  /*$.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {   
 				      alert(textStatus);
 				      alert(errorThrown);
 				      alert(XMLHttpRequest.responseText);
-				  }});
+				  }});*/
 				  //load the database
                 	var roomdata;
 			    	$.getJSON('roomdata.json', function(data) {
