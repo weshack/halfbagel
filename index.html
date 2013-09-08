@@ -592,8 +592,9 @@
 				$("#btnAvailable").html(availableNumber[place] + " rooms available");
 				if(roomdata[place]) {
 					roomList = roomdata[place];
+					$("#roomTable").html('<tr><th>Room Number</th><th>Capacity</th><th><i class="icon-chevron-down"></i></th></tr>');
 						for(number in roomList) {
-							$("#roomTable").html('<tr><th>Room Number</th><th>Capacity</th><th><i class="icon-chevron-down"></i></th></tr>');
+							
 							$("#roomTable").append('<tr id="tr'+number+'"><td>'+number+'</td><td><span class="label label-success">'+roomList[number]+'/'+roomList[number]+'</span></td><td><input type="checkbox" id="ch'+number+'"></td></tr>');
 							for(var i=0; i<selectedRooms.length; i++) {
 						        if(JSON.stringify(selectedRooms[i]) == JSON.stringify([place,number])) {
